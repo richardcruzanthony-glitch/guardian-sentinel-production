@@ -1,0 +1,7 @@
+Background image selections:
+- Manufacturing: Index 3 (dark CNC shop floor) /home/ubuntu/upload/search_images/w0lUPDTngXmm.jpg - but has watermark. Use index 6 (CNC close-up, dark blue) /home/ubuntu/upload/search_images/wQLQnRRSgU0I.jpg
+- Defense: Index 8 (command center with green screens) /home/ubuntu/upload/search_images/KNd2PvXRQZdC.jpg
+- Medical: Index 6 (dark operating room) /home/ubuntu/upload/search_images/6F88rOHUNu2U.jpg
+- Legal: Index 2 (scales of justice, dark) /home/ubuntu/upload/search_images/jFwUQ7jQMobx.jpg
+
+These stock images have watermarks. Better approach: generate clean images with AI or use CSS gradients with subtle patterns.

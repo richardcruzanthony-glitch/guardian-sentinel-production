@@ -1,0 +1,48 @@
+VISUAL AUDIT — Guardian Sentinel
+=================================
+
+HEADER:
+- Domain tabs look like basic pill buttons — no visual weight or hierarchy
+- "Request Demo" is plain text, "Early Access" is a green button — inconsistent pairing
+- Logo area is fine but tagline "Learns · Recommends · Alerts · Executes" is small and forgettable
+
+HERO SECTION:
+- "Every Department. Simultaneously." — good copy but the typography is flat
+- The green-on-dark text lacks depth — no gradient, no glow, no visual drama
+- Body text below is just gray paragraph text — reads like a README, not a product pitch
+- No visual element (illustration, animation, abstract graphic) to anchor the hero
+
+COMPARISON BOXES:
+- Left box (Manual Handoff) — plain numbered list with red time values, looks like a basic table
+- Right box (Neural Architecture) — department badges are tiny green pills, hard to read
+- The boxes have thin borders but no visual distinction — they blend into the dark background
+- "All fire simultaneously — seconds, not weeks" is buried in the box
+- The three bullet points below are small and forgettable
+- No visual energy — this is the KEY selling point and it looks like a sidebar
+
+UPLOAD SECTION:
+- "Upload Engineering Drawing" header is small and plain
+- Dashed border drop zone is the default pattern — looks like every file upload ever
+- "Drawing preview will appear here" placeholder is just gray text in an empty box — looks broken
+- Material dropdown and Quantity input are basic form elements with no styling
+- The "Ara — Coordinate All Departments" button is a full-width green bar — looks like a generic submit button, not a premium AI action
+
+CTA SECTION:
+- "Ready to Transform Your Operations?" — decent copy but the section is plain
+- Two buttons side by side look basic
+- Contact info (Richard Cruz, phone) is just plain text at the bottom — no visual treatment
+
+FOOTER:
+- Minimal and fine, but the tagline repeats the header — feels redundant
+
+OVERALL ISSUES:
+1. No depth — everything is flat. No shadows, no gradients, no layering
+2. No visual anchors — no illustrations, icons with meaning, or abstract graphics
+3. Typography is monotone — same weight, same style throughout
+4. The comparison section (the most important part) doesn't command attention
+5. Upload area looks like a dev prototype, not a polished product
+6. No background variation — solid dark everywhere creates visual fatigue
+7. The green accent color is used for everything — no hierarchy in color usage
+8. Form elements are unstyled defaults
+9. No micro-interactions or visual feedback
+10. The page reads top-to-bottom like a document, not a product experience

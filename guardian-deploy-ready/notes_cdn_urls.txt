@@ -1,0 +1,5 @@
+Background Image CDN URLs:
+manufacturing: https://files.manuscdn.com/user_upload_by_module/session_file/310519663291553249/pEmGnUvsJoiMQbHO.jpg
+defense: https://files.manuscdn.com/user_upload_by_module/session_file/310519663291553249/gyeELqKFbUIuYyVe.jpg
+medical: https://files.manuscdn.com/user_upload_by_module/session_file/310519663291553249/jmbrpdUxtDdNZQBj.jpg
+legal: https://files.manuscdn.com/user_upload_by_module/session_file/310519663291553249/ywVkoyznIqCSpWdz.jpg

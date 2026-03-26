@@ -1,0 +1,1 @@
+ALTER TABLE `leads` MODIFY COLUMN `type` enum('demo','early_access','roi_calculator') NOT NULL;

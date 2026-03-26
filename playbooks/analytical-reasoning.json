@@ -1,0 +1,298 @@
+{
+  "version": "2.1.0",
+  "domain": "analytical-reasoning",
+  "description": "Pattern recognition and abstract reasoning doctrine for grid-based logic puzzles, spatial transformations, and rule inference. Teaches ARA to systematically identify, verify, and apply transformation rules from training examples to novel test inputs. Developed after ARC-AGI benchmark run (2/10) to correct mirror-axis errors, gravity-collapse errors, and fractal-fill errors.",
+  "missions": 0,
+  "success_rate": 0.0,
+  "iteration_count": 0,
+  "last_updated": "2026-03-26T00:00:00Z",
+  "iron_alignment": {
+    "primary_axiom": "AXIOM_03",
+    "axiom_label": "Handle the Unknown",
+    "principle": "When facing an unknown pattern, do not guess. Systematically eliminate transformation categories until the rule is identified. If no rule is found with high confidence, escalate to human authority."
+  },
+  "doctrine": {
+    "name": "Pattern Recognition Doctrine",
+    "summary": "Ordered elimination protocol for identifying grid transformation rules. Check substitution first, then spatial transforms, then compositional rules. Never skip verification. Never assume — prove the rule works on ALL training examples before applying to test input.",
+    "priority_order": [
+      "1. VALUE SUBSTITUTION — check if output values are a consistent remapping of input values",
+      "2. SPATIAL TRANSFORMS — check reflection, rotation, transposition, gravity",
+      "3. COMPOSITIONAL RULES — check fractal tiling, border/surround, XOR/intersection, sub-pattern extraction",
+      "4. CONDITIONAL LOGIC — check row/column uniformity, height-rank, region detection",
+      "5. COMPOUND RULES — check if two or more simple rules combine to produce the output"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Parse All Training Pairs",
+        "action": "Extract every training input grid and its corresponding output grid. Record dimensions (rows x cols) for each. Note any dimension changes between input and output.",
+        "detail": "Convert each grid to a 2D integer array. Log: input_dims, output_dims, unique_values_in, unique_values_out. If dimensions change, the rule involves resizing — this eliminates pure spatial transforms.",
+        "failure_mode": "If parsing fails, the input format is non-standard. Attempt to extract grid data by looking for rows of space-separated or comma-separated integers."
+      },
+      {
+        "step": 2,
+        "title": "Check Value Substitution",
+        "action": "For each training pair, build a mapping: for every cell (r,c), map input[r][c] → output[r][c]. Check if this mapping is consistent (each input value always maps to the same output value) across ALL training examples.",
+        "detail": "If the mapping is consistent and dimensions are unchanged, the rule is pure value substitution. Build the complete mapping table and apply to test input.",
+        "example": "Puzzle 0d3d703e: input values {1,2,3} mapped to {5,6,4}. Mapping was consistent across all 3 training pairs. Applied to test → CORRECT.",
+        "failure_mode": "If mapping is inconsistent (same input value maps to different output values in different cells), this is NOT pure substitution. Move to step 3."
+      },
+      {
+        "step": 3,
+        "title": "Check Spatial Transforms",
+        "action": "Test each spatial transform in order: (a) horizontal reflection, (b) vertical reflection, (c) 90° rotation, (d) 180° rotation, (e) 270° rotation, (f) transposition.",
+        "detail": "CRITICAL DEFINITIONS — do NOT confuse these:\n  - HORIZONTAL REFLECTION (mirror across vertical axis): reverse each ROW left-to-right. Row order stays the same.\n  - VERTICAL REFLECTION (mirror across horizontal axis): reverse the ORDER of rows top-to-bottom. Each row's internal order stays the same.\n  - 90° CLOCKWISE ROTATION: transpose then reverse each row.\n  - 180° ROTATION: reverse row order AND reverse each row.\n  - 270° CLOCKWISE ROTATION: transpose then reverse each column.\n  - TRANSPOSITION: swap rows and columns (row i, col j → row j, col i).",
+        "known_errors": [
+          {
+            "puzzle": "3c9b0459",
+            "error": "Applied horizontal reflection (reversed each row) when the correct answer was vertical reflection (reversed row order).",
+            "lesson": "ALWAYS test BOTH horizontal and vertical reflection. Compare results against ALL training outputs. The one that matches ALL training pairs is correct."
+          }
+        ],
+        "failure_mode": "If no single spatial transform matches all training pairs, move to step 4."
+      },
+      {
+        "step": 4,
+        "title": "Check Gravity and Stacking",
+        "action": "Test if non-zero values 'fall' to the bottom (or top, left, right) of their column (or row), maintaining count.",
+        "detail": "GRAVITY RULES:\n  - Count the number of non-zero values in each column.\n  - Place that exact count of non-zero values at the bottom of the column.\n  - Fill remaining cells with zero.\n  - CRITICAL: gravity PRESERVES the count of each value per column. If a column has two 2s and one 5, the output column must have two 2s and one 5 stacked at the bottom.\n  - Test all four directions: gravity-down, gravity-up, gravity-left, gravity-right.",
+        "known_errors": [
+          {
+            "puzzle": "25ff71a9",
+            "error": "Collapsed two rows of 2s into a single row. Lost values.",
+            "lesson": "Gravity NEVER reduces the count of values. Every non-zero value in the input must appear in the output. Count must be preserved per column."
+          }
+        ],
+        "failure_mode": "If gravity does not explain the transform, move to step 5."
+      },
+      {
+        "step": 5,
+        "title": "Check Compositional Rules",
+        "action": "Test fractal tiling, border/surround, XOR/intersection, and sub-pattern extraction.",
+        "sub_checks": [
+          {
+            "name": "Fractal / Self-Similar Tiling",
+            "rule": "Each non-zero cell in a 'key' grid becomes a COPY of the entire input pattern (or a reference pattern). Zero cells become zero-filled blocks of the same size.",
+            "critical_error": "Do NOT fill non-zero cells with solid blocks of that value. Each non-zero cell becomes a COPY of the INPUT PATTERN with values potentially remapped.",
+            "known_errors": [
+              {
+                "puzzle": "007bbfb7",
+                "error": "Filled each non-zero cell with a solid block of that value instead of copying the input pattern.",
+                "lesson": "Fractal tiling means the input pattern is TILED into itself. Each non-zero cell in the input becomes a scaled copy of the entire input. Each zero cell becomes a zero-filled block."
+              }
+            ]
+          },
+          {
+            "name": "Border / Surround",
+            "rule": "Add a ring of a specific value around each non-zero cell or connected region. The border value and thickness must be inferred from training examples.",
+            "detail": "Check: does each non-zero cell gain adjacent cells of a specific value? Does the border extend 1 cell, 2 cells, or more?"
+          },
+          {
+            "name": "XOR / Intersection Mask",
+            "rule": "If the input contains two distinct regions or layers, the output may be their XOR (cells that differ), AND (cells that match), or OR (union).",
+            "detail": "Look for two sub-grids within the input (e.g., separated by a divider row/column of a specific value). Compare them cell-by-cell."
+          },
+          {
+            "name": "Sub-Pattern Extraction",
+            "rule": "The output is a smaller grid extracted from the input — a specific region, a bounding box around non-zero cells, or a filtered subset.",
+            "detail": "Check if the output dimensions are smaller than input. If so, try to locate the output as a sub-region of the input."
+          }
+        ],
+        "failure_mode": "If no compositional rule matches, move to step 6."
+      },
+      {
+        "step": 6,
+        "title": "Check Conditional and Statistical Rules",
+        "action": "Test row/column uniformity detection, height-rank colouring, region detection, and counting rules.",
+        "sub_checks": [
+          {
+            "name": "Uniform Row/Column Detection",
+            "rule": "Rows (or columns) where all values are the same get one output value; mixed rows get another.",
+            "example": "Puzzle 25d8a9c8: uniform rows → value 5, non-uniform rows → value 0."
+          },
+          {
+            "name": "Height-Rank Colouring",
+            "rule": "Columns (or rows) are ranked by some property (e.g., height of non-zero stack) and assigned colours based on rank."
+          },
+          {
+            "name": "Region Detection",
+            "rule": "Identify connected regions of specific values. Output may highlight, extract, or transform specific regions."
+          }
+        ],
+        "failure_mode": "If no single rule matches, consider compound rules (step 7)."
+      },
+      {
+        "step": 7,
+        "title": "Check Compound Rules",
+        "action": "The transformation may be a combination of two or more simple rules applied in sequence. Try common combinations: substitution + reflection, extraction + rotation, gravity + substitution.",
+        "detail": "Apply each simple rule as a first pass, then check if a second simple rule converts the intermediate result to the expected output.",
+        "failure_mode": "If no compound rule is found, escalate: report the puzzle as unsolved with detailed analysis of what was tried. Request human review or LLM assistance with specific hypotheses to test."
+      },
+      {
+        "step": 8,
+        "title": "Verify Rule on ALL Training Examples",
+        "action": "Apply the identified rule to EVERY training input. Compare the result to the expected training output cell-by-cell.",
+        "detail": "Verification checklist:\n  (a) Dimensions match: output rows == expected rows, output cols == expected cols.\n  (b) Every cell matches: output[r][c] == expected[r][c] for all r, c.\n  (c) No extra or missing values.\n  If verification fails on ANY training example, the rule is WRONG. Return to step 2 and try the next candidate.",
+        "critical": "NEVER skip this step. A rule that works on one training example but fails on another is NOT the correct rule."
+      },
+      {
+        "step": 9,
+        "title": "Apply Rule to Test Input",
+        "action": "Apply the verified rule to the test input grid.",
+        "detail": "Execute the exact same transformation that was verified on training examples. Do not modify or 'improve' the rule for the test case."
+      },
+      {
+        "step": 10,
+        "title": "Self-Check and Output",
+        "action": "Verify the test output, then format and return the answer.",
+        "detail": "Self-check protocol:\n  (a) Verify output dimensions are consistent with what training examples predict.\n  (b) Verify all output values are within the valid set (values seen in training outputs, or 0-9).\n  (c) Verify the rule was applied consistently — no ad-hoc adjustments for the test case.\n  (d) If any check fails, flag the answer as LOW CONFIDENCE and report which check failed.",
+        "output_format": "Return the answer inside a ```grid``` code block. Each row on its own line. Values separated by spaces. No trailing spaces. No extra blank lines."
+      }
+    ]
+  },
+  "transformation_library": {
+    "description": "Reference library of known transformation types with formal definitions. Use these definitions — do not improvise alternative definitions.",
+    "transforms": [
+      {
+        "id": "T01",
+        "name": "Value Substitution",
+        "formal": "For all (r,c): output[r][c] = map[input[r][c]] where map is a consistent value→value function.",
+        "dims_change": false,
+        "detection": "Build mapping from first training pair. Verify on remaining pairs."
+      },
+      {
+        "id": "T02",
+        "name": "Horizontal Reflection",
+        "formal": "For all (r,c): output[r][c] = input[r][cols-1-c]. Mirrors across vertical axis.",
+        "dims_change": false,
+        "detection": "Reverse each row of input. Compare to output."
+      },
+      {
+        "id": "T03",
+        "name": "Vertical Reflection",
+        "formal": "For all (r,c): output[r][c] = input[rows-1-r][c]. Mirrors across horizontal axis.",
+        "dims_change": false,
+        "detection": "Reverse the order of rows. Compare to output."
+      },
+      {
+        "id": "T04",
+        "name": "Rotation 90° Clockwise",
+        "formal": "output[c][rows-1-r] = input[r][c]. Output dims: (cols x rows).",
+        "dims_change": true,
+        "detection": "Transpose input, then reverse each row. Compare to output."
+      },
+      {
+        "id": "T05",
+        "name": "Rotation 180°",
+        "formal": "For all (r,c): output[r][c] = input[rows-1-r][cols-1-c].",
+        "dims_change": false,
+        "detection": "Reverse row order AND reverse each row. Compare to output."
+      },
+      {
+        "id": "T06",
+        "name": "Rotation 270° Clockwise",
+        "formal": "output[cols-1-c][r] = input[r][c]. Output dims: (cols x rows).",
+        "dims_change": true,
+        "detection": "Transpose input, then reverse each column. Compare to output."
+      },
+      {
+        "id": "T07",
+        "name": "Transposition",
+        "formal": "output[c][r] = input[r][c]. Output dims: (cols x rows).",
+        "dims_change": true,
+        "detection": "Swap rows and columns. Compare to output."
+      },
+      {
+        "id": "T08",
+        "name": "Gravity Down",
+        "formal": "For each column, collect non-zero values top-to-bottom, place them at the bottom of the column, fill above with 0. Count of each value per column is preserved.",
+        "dims_change": false,
+        "detection": "For each column, count non-zeros. Stack at bottom. Compare to output."
+      },
+      {
+        "id": "T09",
+        "name": "Fractal Tiling",
+        "formal": "Output grid is (input_rows * input_rows) x (input_cols * input_cols). For each cell (r,c) in input: if input[r][c] != 0, place a copy of the input pattern (with value substitution: non-zero input values may be replaced by input[r][c]) at block position (r,c). If input[r][c] == 0, place a zero block.",
+        "dims_change": true,
+        "detection": "Check if output dims are input_dims squared. Check if non-zero blocks contain copies of the input pattern."
+      },
+      {
+        "id": "T10",
+        "name": "Border / Surround",
+        "formal": "Each non-zero cell or connected region gains a border of a specific value at distance 1 (or more) in cardinal and/or diagonal directions.",
+        "dims_change": "varies",
+        "detection": "Check if output has new values adjacent to non-zero input cells."
+      },
+      {
+        "id": "T11",
+        "name": "XOR / Intersection Mask",
+        "formal": "Input contains two sub-grids (separated by divider). Output is the XOR, AND, or OR of the two sub-grids.",
+        "dims_change": true,
+        "detection": "Look for a divider row/column. Split input into two halves. Test XOR, AND, OR."
+      },
+      {
+        "id": "T12",
+        "name": "Sub-Pattern Extraction",
+        "formal": "Output is a sub-region of the input, typically the bounding box of non-zero cells or a specific connected component.",
+        "dims_change": true,
+        "detection": "Check if output is smaller than input. Try to locate output as a sub-grid within input."
+      },
+      {
+        "id": "T13",
+        "name": "Uniform Row/Column Detection",
+        "formal": "Rows (or columns) are classified as uniform (all same value) or mixed. Output assigns specific values based on classification.",
+        "dims_change": "varies",
+        "detection": "Check each row for uniformity. Map uniform→value_a, mixed→value_b. Compare to output."
+      },
+      {
+        "id": "T14",
+        "name": "Height-Rank Colouring",
+        "formal": "Columns are ranked by the height of their non-zero stack. Rank determines the output colour assigned to each column's cells.",
+        "dims_change": false,
+        "detection": "Count non-zero cells per column. Rank columns. Check if output values correspond to rank."
+      }
+    ]
+  },
+  "iteration_protocol": {
+    "description": "Protocol for iterative puzzle solving. ARA should attempt each puzzle multiple times, learning from failures.",
+    "max_attempts": 100,
+    "attempt_strategy": [
+      "Attempt 1: Follow doctrine steps 1-10 in order. Apply the first rule that passes verification.",
+      "Attempt 2-5: If attempt 1 failed, re-examine with explicit focus on the transformation types NOT tried in attempt 1. Check compound rules.",
+      "Attempt 6-10: Request LLM assistance. Provide the LLM with: (a) all training pairs, (b) the rules already tried and why they failed, (c) ask for alternative hypotheses.",
+      "Attempt 11+: Systematic brute-force. Try every transformation in the library, including all compound combinations of two transforms. Log all results.",
+      "After each attempt: Record the attempt number, rule tried, result, and whether it matched. Store in PostgreSQL for cross-puzzle learning."
+    ],
+    "persistence": {
+      "store": "PostgreSQL",
+      "table": "ara_puzzle_attempts",
+      "fields": ["puzzle_id", "attempt_number", "rule_tried", "result_grid", "correct", "timestamp", "notes"]
+    }
+  },
+  "error_catalogue": {
+    "description": "Known errors from ARC-AGI benchmark run 2026-03-26. Score: 2/10.",
+    "errors": [
+      {
+        "puzzle_id": "3c9b0459",
+        "type": "mirror",
+        "error": "Applied horizontal reflection instead of vertical reflection",
+        "root_cause": "Did not test both reflection axes. Assumed 'mirror' meant reverse each row.",
+        "fix": "Always test BOTH T02 (horizontal) and T03 (vertical). Use the one that matches ALL training pairs."
+      },
+      {
+        "puzzle_id": "25ff71a9",
+        "type": "gravity",
+        "error": "Collapsed two rows of value 2 into one row",
+        "root_cause": "Gravity implementation did not preserve per-column value counts.",
+        "fix": "Count non-zero values per column BEFORE applying gravity. Verify count is preserved AFTER."
+      },
+      {
+        "puzzle_id": "007bbfb7",
+        "type": "fractal",
+        "error": "Filled non-zero cells with solid blocks instead of copies of the input pattern",
+        "root_cause": "Misunderstood fractal tiling. Treated non-zero cells as 'fill with this value' instead of 'place a copy of the pattern here'.",
+        "fix": "Fractal tiling: non-zero cell → copy of ENTIRE input pattern. Zero cell → zero-filled block of same size."
+      }
+    ]
+  }
+}

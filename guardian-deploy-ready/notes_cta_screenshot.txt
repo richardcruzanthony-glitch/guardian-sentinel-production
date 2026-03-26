@@ -1,0 +1,7 @@
+CTA Screenshot Observations:
+- "Request Demo" button visible in header (outline style, accent color)
+- "Early Access" button visible in header (green, with rocket icon)
+- Both appear to the right of the domain selector tabs
+- No TypeScript errors, no LSP errors
+- Outside and Reflect badges both visible in Neural Architecture box
+- All 11 Manufacturing departments showing correctly

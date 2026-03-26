@@ -1,0 +1,500 @@
+
+================================================================================
+ARA MEMORY ADDITIONS — ANALYTICAL REASONING HARDENING
+================================================================================
+Append this entire block to ~/ara/us-complete.txt
+Date: 2026-03-26
+Context: Post ARC-AGI benchmark run. Score 2/10 with LLM, 0/10 pure logic.
+Purpose: Encode pattern recognition doctrine, run logs, lessons learned, and
+         self-correction protocols into persistent memory.
+================================================================================
+
+
+--- NODE: PATTERN_DOCTRINE_001 ---
+TITLE: Pattern Recognition Doctrine — Priority Order
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+When facing a grid transformation puzzle, follow this elimination order:
+  PRIORITY 1: VALUE SUBSTITUTION — Check if output values are a consistent
+    remapping of input values. Build a mapping table. Verify on all training
+    examples. This is the simplest and most common transformation.
+  PRIORITY 2: SPATIAL TRANSFORMS — Check reflection (horizontal AND vertical),
+    rotation (90, 180, 270), transposition, and gravity (all four directions).
+    Test each one. The one that matches ALL training pairs is correct.
+  PRIORITY 3: COMPOSITIONAL RULES — Check fractal tiling, border/surround,
+    XOR/intersection masks, and sub-pattern extraction. These involve
+    combining or decomposing grids.
+  PRIORITY 4: CONDITIONAL LOGIC — Check row/column uniformity detection,
+    height-rank colouring, region detection, and counting rules.
+  PRIORITY 5: COMPOUND RULES — If no single rule matches, try combinations
+    of two simple rules applied in sequence.
+
+Never skip a priority level. Never assume. Prove the rule works on ALL
+training examples before applying to the test input.
+--- END NODE ---
+
+
+--- NODE: PATTERN_DOCTRINE_002 ---
+TITLE: Spatial Transform Definitions — CRITICAL
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+These definitions are EXACT. Do not improvise alternatives.
+
+HORIZONTAL REFLECTION (mirror across vertical axis):
+  For all (r,c): output[r][c] = input[r][cols-1-c]
+  Effect: Each row is reversed left-to-right. Row ORDER stays the same.
+  Mnemonic: "Horizontal = flip the Horizontal content of each row"
+
+VERTICAL REFLECTION (mirror across horizontal axis):
+  For all (r,c): output[r][c] = input[rows-1-r][c]
+  Effect: The ORDER of rows is reversed top-to-bottom. Each row's internal
+  content stays the same.
+  Mnemonic: "Vertical = flip the Vertical order of rows"
+
+ROTATION 90° CLOCKWISE:
+  Transpose the grid, then reverse each row.
+  Output dimensions: (cols x rows) — transposed.
+
+ROTATION 180°:
+  Reverse row order AND reverse each row.
+  Output dimensions: same as input.
+
+ROTATION 270° CLOCKWISE:
+  Transpose the grid, then reverse each column.
+  Output dimensions: (cols x rows) — transposed.
+
+TRANSPOSITION:
+  Swap rows and columns: output[c][r] = input[r][c]
+  Output dimensions: (cols x rows) — transposed.
+
+ALWAYS test BOTH horizontal and vertical reflection. The correct one is
+whichever matches ALL training pairs. If neither matches alone, try rotation.
+--- END NODE ---
+
+
+--- NODE: PATTERN_DOCTRINE_003 ---
+TITLE: Gravity Rules — Value Count Preservation
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+GRAVITY means non-zero values "fall" to one edge of their column (or row).
+
+GRAVITY DOWN:
+  For each column, collect all non-zero values from top to bottom.
+  Place them at the BOTTOM of the column in the same order.
+  Fill remaining cells above with zero.
+
+CRITICAL RULE: Gravity PRESERVES the count of each value per column.
+  If a column has two 2s and one 5, the output column MUST have two 2s
+  and one 5. No values are created or destroyed.
+
+COMMON ERROR: Collapsing multiple rows into fewer rows. This is WRONG.
+  Gravity only moves values within their column. The grid dimensions
+  do not change. The total count of each non-zero value is preserved.
+
+Test all four directions: gravity-down, gravity-up, gravity-left, gravity-right.
+--- END NODE ---
+
+
+--- NODE: PATTERN_DOCTRINE_004 ---
+TITLE: Fractal Tiling Rules — Copy Pattern, Not Solid Block
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+FRACTAL TILING means each non-zero cell in the input becomes a COPY of the
+entire input pattern (or a reference pattern). Zero cells become zero-filled
+blocks of the same size.
+
+Output dimensions: (input_rows * input_rows) x (input_cols * input_cols)
+
+For each cell (r,c) in the input:
+  If input[r][c] != 0:
+    Place a copy of the input pattern at block position (r,c).
+    Non-zero values in the copy may be remapped to input[r][c].
+  If input[r][c] == 0:
+    Place a zero-filled block of size (input_rows x input_cols).
+
+CRITICAL ERROR TO AVOID: Do NOT fill non-zero cells with solid blocks of
+that value. Each non-zero cell becomes a COPY of the ENTIRE input pattern,
+not a filled rectangle.
+
+Example: If input is [[0,1],[1,0]], the output is a 4x4 grid where:
+  Block (0,0) = zero block (because input[0][0] = 0)
+  Block (0,1) = copy of [[0,1],[1,0]] (because input[0][1] = 1)
+  Block (1,0) = copy of [[0,1],[1,0]] (because input[1][0] = 1)
+  Block (1,1) = zero block (because input[1][1] = 0)
+--- END NODE ---
+
+
+--- NODE: PATTERN_DOCTRINE_005 ---
+TITLE: Self-Check Protocol — Verify Before Output
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+After computing a test output, run these checks BEFORE returning the answer:
+
+CHECK 1 — DIMENSIONS: Output dimensions must be consistent with the
+  relationship between training input and output dimensions. If training
+  inputs are 3x3 and outputs are 3x3, test output must be the same
+  dimensions as test input. If training outputs are input_rows^2, then
+  test output rows must be test_input_rows^2.
+
+CHECK 2 — VALUES: Every value in the output must be in the range 0-9.
+  Every value should be a value that appears in the training outputs
+  (or is a valid substitution of a training input value).
+
+CHECK 3 — RULE CONSISTENCY: The same rule must have been applied to the
+  test input as was verified on training examples. No ad-hoc adjustments.
+  No "fixing" the test output to "look right."
+
+CHECK 4 — COUNT PRESERVATION: For transforms that preserve value counts
+  (gravity, reflection, rotation), verify that the count of each value
+  in the output matches the count in the input.
+
+If any check fails, flag the answer as LOW CONFIDENCE and report which
+check failed. Do not silently output a wrong answer.
+--- END NODE ---
+
+
+--- NODE: ARC_RUN_LOG_001 ---
+TITLE: ARC-AGI Benchmark Run Log — 2026-03-26
+TYPE: run_log
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+BENCHMARK: ARC-AGI (Abstraction and Reasoning Corpus)
+DATE: 2026-03-26
+SCORE: 2/10 with LLM assistance, 0/10 pure logic
+PUZZLES ATTEMPTED: 10
+
+PUZZLE 1: 0d3d703e — Colour Substitution
+  RESULT: CORRECT on attempt 1
+  TYPE: Value Substitution (T01)
+  ANALYSIS: Identified that each input value maps to a different output value.
+    Built mapping: 3→4, 1→5, 2→6 (and other pairs as present).
+    Mapping was consistent across all 3 training pairs.
+    Applied mapping to test input. Output matched expected answer.
+  CONFIDENCE: HIGH
+  LESSON: Value substitution is the simplest transform. Always check first.
+  TIME: Fast — identified on first pass through doctrine priority order.
+
+PUZZLE 2: 25d8a9c8 — Uniform Row Detection
+  RESULT: CORRECT on attempt 1
+  TYPE: Conditional Logic — Uniform Row Detection (T13)
+  ANALYSIS: Identified that rows where all values are the same (uniform)
+    produce output value 5, and rows with mixed values produce output value 0.
+    Verified on all training pairs. Applied to test input.
+  CONFIDENCE: HIGH
+  LESSON: Conditional rules can be simple. Check row/column uniformity
+    as part of priority 4.
+  TIME: Moderate — reached after spatial transforms failed.
+
+PUZZLE 3: 3c9b0459 — Mirror / Reflection
+  RESULT: INCORRECT
+  TYPE: Vertical Reflection (T03) — but ARA applied Horizontal Reflection (T02)
+  ERROR: Flipped each row left-to-right (horizontal reflection) when the
+    correct answer was to reverse the order of rows top-to-bottom (vertical
+    reflection).
+  ROOT CAUSE: Did not test BOTH reflection axes. Assumed "mirror" meant
+    reverse each row. Stopped after the first reflection attempt without
+    verifying against all training pairs.
+  LESSON: ALWAYS test both horizontal and vertical reflection. Compare
+    results against ALL training outputs. The one that matches ALL pairs
+    is correct. Horizontal reflection reverses each row's content.
+    Vertical reflection reverses the row ORDER.
+  FIX APPLIED: Doctrine now requires testing both T02 and T03 before
+    declaring a match. buildAutonomousDecision patch tests both.
+
+PUZZLE 4: 25ff71a9 — Gravity / Stacking
+  RESULT: INCORRECT
+  TYPE: Gravity Down (T08)
+  ERROR: Collapsed two rows containing value 2 into a single row. The output
+    had fewer non-zero values than the input. Lost data.
+  ROOT CAUSE: Gravity implementation did not preserve per-column value counts.
+    Treated gravity as "merge duplicate values" instead of "stack all values
+    at the bottom."
+  LESSON: Gravity NEVER reduces the count of values. Every non-zero value
+    in the input must appear in the output. Count must be preserved per
+    column. If a column has three non-zero cells, the output column must
+    have exactly three non-zero cells stacked at the bottom.
+  FIX APPLIED: Gravity function now explicitly counts non-zero values per
+    column and preserves all of them. Self-check protocol verifies count
+    preservation.
+
+PUZZLE 5: 007bbfb7 — Fractal Tiling
+  RESULT: INCORRECT
+  TYPE: Fractal / Self-Similar Tiling (T09)
+  ERROR: Filled each non-zero cell position with a solid block of that
+    cell's value. The output was a grid of solid-coloured rectangles
+    instead of copies of the input pattern.
+  ROOT CAUSE: Misunderstood fractal tiling. Interpreted "non-zero cell
+    becomes a block" as "fill with solid value" instead of "place a copy
+    of the input pattern."
+  LESSON: Fractal tiling means the input pattern is TILED into itself.
+    Each non-zero cell in the input becomes a scaled copy of the ENTIRE
+    input pattern. Each zero cell becomes a zero-filled block of the same
+    size. The output grid is (rows*rows) x (cols*cols).
+  FIX APPLIED: Two fractal tiling variants added to buildAutonomousDecision:
+    value-mapped (non-zero values in copy replaced by cell value) and
+    exact copy (original values preserved). Both are tested.
+
+PUZZLE 6: dc1df850 — Surround / Border Pattern
+  RESULT: INCORRECT
+  TYPE: Border / Surround (T10)
+  ERROR: Did not correctly identify the border value or the border thickness.
+    Output had incorrect values adjacent to target cells.
+  ROOT CAUSE: Border detection logic not yet implemented in pure logic path.
+    Relied on LLM which also failed to identify the exact rule.
+  LESSON: Border patterns require identifying: (a) which cells are targets,
+    (b) what value the border uses, (c) how many cells thick the border is,
+    (d) whether borders are cardinal-only or include diagonals.
+  STATUS: Requires further implementation. Added to transformation library
+    as T10 with detection heuristics.
+
+PUZZLE 7: 0520fde7 — XOR / Intersection Mask
+  RESULT: INCORRECT
+  TYPE: XOR Mask (T11)
+  ERROR: Did not correctly identify the divider or the XOR operation.
+  ROOT CAUSE: XOR mask detection requires finding a divider row or column
+    that splits the grid into two equal halves, then comparing them.
+    The divider detection was not implemented.
+  LESSON: Look for a row or column where all values are the same non-zero
+    value. This is likely a divider. Split the grid at the divider and
+    compare the two halves cell-by-cell.
+  FIX APPLIED: XOR mask detection added to buildAutonomousDecision. Tests
+    both row and column dividers.
+
+PUZZLE 8: 08ed6ac7 — Height-Rank Colouring
+  RESULT: INCORRECT
+  TYPE: Height-Rank Colouring (T14)
+  ERROR: Did not identify the ranking rule.
+  ROOT CAUSE: Height-rank colouring requires counting the "height" of
+    non-zero stacks in each column, ranking them, and assigning colours
+    based on rank. This multi-step analysis was not attempted.
+  LESSON: For puzzles where the output has new values not present in the
+    input, consider ranking-based rules. Count a property per column or
+    row, rank them, and map rank to output value.
+  STATUS: Detection heuristic added to playbook. Full implementation
+    pending.
+
+PUZZLE 9: 6ecd11f4 — Sub-Pattern Extraction
+  RESULT: INCORRECT
+  TYPE: Sub-Pattern Extraction (T12)
+  ERROR: Did not correctly identify which sub-region to extract.
+  ROOT CAUSE: Sub-pattern extraction requires identifying a specific region
+    of interest (e.g., bounding box of non-zero cells, a specific connected
+    component, or a region marked by a border value).
+  LESSON: When output is smaller than input, the rule likely involves
+    extraction. Try: (a) bounding box of non-zero cells, (b) a specific
+    connected component, (c) the region inside a border.
+  STATUS: Basic detection added to playbook. Full implementation pending.
+
+PUZZLE 10: ff805c23 — Tiled Mosaic / Locate Coloured Region
+  RESULT: INCORRECT
+  TYPE: Region Detection / Tiled Mosaic
+  ERROR: Did not correctly identify the target region or the tiling rule.
+  ROOT CAUSE: Complex puzzle requiring identification of a coloured region
+    within a tiled or repeated pattern. Multiple steps needed.
+  LESSON: Some puzzles combine region detection with another transform.
+    These are compound rules (priority 5). Must identify each component
+    rule separately, then combine.
+  STATUS: Requires compound rule detection. Added to iteration protocol
+    for future attempts.
+--- END NODE ---
+
+
+--- NODE: ARC_RUN_LOG_002 ---
+TITLE: ARC-AGI Run Summary and Improvement Targets
+TYPE: run_log
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+SUMMARY OF ARC-AGI RUN 2026-03-26:
+  Total puzzles: 10
+  Correct: 2 (20%) — puzzles 0d3d703e, 25d8a9c8
+  Incorrect: 8 (80%) — puzzles 3c9b0459, 25ff71a9, 007bbfb7, dc1df850,
+    0520fde7, 08ed6ac7, 6ecd11f4, ff805c23
+
+ERRORS BY CATEGORY:
+  Wrong axis (mirror): 1 — fixed in doctrine and code
+  Value count violation (gravity): 1 — fixed in doctrine and code
+  Wrong interpretation (fractal): 1 — fixed in doctrine and code
+  Not yet implemented: 5 — surround, XOR, height-rank, sub-pattern, mosaic
+
+IMPROVEMENT TARGETS FOR NEXT RUN:
+  Target 1: Score 5/10 — fix the three known errors (mirror, gravity, fractal)
+    and solve at least two of the five unimplemented types.
+  Target 2: Score 7/10 — implement all transformation types in the library.
+  Target 3: Score 10/10 — add compound rule detection and iterative solving.
+
+ITERATION STRATEGY:
+  Run each puzzle up to 100 times. After each attempt:
+    1. Record the attempt in PostgreSQL (puzzle_id, attempt_number, rule_tried,
+       result_grid, correct, timestamp, notes).
+    2. If incorrect, eliminate the rule that was tried.
+    3. On next attempt, try the next rule in priority order.
+    4. After exhausting all single rules, try compound rules.
+    5. After exhausting compound rules, request LLM assistance with full
+       context of all failed attempts.
+  This ensures ARA learns from every failure and never repeats the same
+  wrong answer.
+--- END NODE ---
+
+
+--- NODE: PATTERN_DOCTRINE_006 ---
+TITLE: Common Mistakes Catalogue — What NOT To Do
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+MISTAKE 1: WRONG AXIS FOR MIRROR
+  Wrong: Assuming "mirror" means reverse each row (horizontal reflection).
+  Right: Test BOTH horizontal and vertical reflection. Use the one that
+    matches ALL training pairs.
+  Trigger: Any puzzle where the output looks like a "flipped" version of
+    the input.
+
+MISTAKE 2: COLLAPSING ROWS FOR GRAVITY
+  Wrong: Merging duplicate values or reducing the number of non-zero cells.
+  Right: Gravity preserves ALL non-zero values. Count per column is constant.
+    Values just move to one edge.
+  Trigger: Any puzzle where non-zero values appear to "stack" or "settle."
+
+MISTAKE 3: FILLING SOLID BLOCKS FOR FRACTAL
+  Wrong: Replacing each non-zero cell with a solid rectangle of that value.
+  Right: Each non-zero cell becomes a copy of the ENTIRE input pattern.
+    Zero cells become zero blocks.
+  Trigger: Any puzzle where the output is significantly larger than the
+    input (output_rows = input_rows^2).
+
+MISTAKE 4: NOT VERIFYING ON ALL TRAINING EXAMPLES
+  Wrong: Finding a rule that works on the first training pair and assuming
+    it works on all.
+  Right: ALWAYS verify the rule on EVERY training pair before applying to
+    the test input.
+  Trigger: Every puzzle. No exceptions.
+
+MISTAKE 5: SKIPPING THE SELF-CHECK
+  Wrong: Outputting the answer without checking dimensions, values, and
+    consistency.
+  Right: Run the full self-check protocol (dimensions, values, rule
+    consistency, count preservation) before outputting.
+  Trigger: Every puzzle. No exceptions.
+
+MISTAKE 6: GUESSING INSTEAD OF ESCALATING
+  Wrong: Making up an answer when no rule is found.
+  Right: If no rule matches with high confidence, report the puzzle as
+    unsolved. Log what was tried. Escalate to human or LLM with full
+    context. AXIOM_03 — Handle the Unknown.
+  Trigger: When all priority levels have been exhausted without a match.
+--- END NODE ---
+
+
+--- NODE: PATTERN_DOCTRINE_007 ---
+TITLE: Grid Output Format Standard
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+When outputting a grid answer, use this exact format:
+
+```grid
+0 1 2 3
+4 5 6 7
+8 9 0 1
+```
+
+Rules:
+  - Each row on its own line.
+  - Values separated by single spaces.
+  - No trailing spaces on any line.
+  - No extra blank lines inside the grid block.
+  - No brackets, commas, or other formatting.
+  - The ```grid``` fence must be on its own line before and after the grid.
+--- END NODE ---
+
+
+--- NODE: ITERATION_PROTOCOL_001 ---
+TITLE: Iterative Puzzle Solving Protocol
+TYPE: doctrine
+DOMAIN: analytical-reasoning
+LOCKED: true
+
+ARA can and should attempt each puzzle multiple times, learning from each
+failure. The iteration protocol:
+
+ATTEMPT 1: Follow Pattern Recognition Doctrine steps 1-10 in strict order.
+  Apply the first rule that passes verification on all training pairs.
+
+ATTEMPT 2-5: If attempt 1 failed, re-examine with explicit focus on the
+  transformation types NOT tried in attempt 1. Expand to compound rules.
+  Review the error catalogue for common mistakes.
+
+ATTEMPT 6-10: Request LLM assistance (Gemini via API). Provide:
+  (a) All training input/output pairs as text grids.
+  (b) The rules already tried and why they failed.
+  (c) Ask for alternative hypotheses — "What transformation converts
+      this input to this output?"
+
+ATTEMPT 11-100: Systematic brute-force. Try every transformation in the
+  library, including all pairwise combinations. Log every result.
+
+AFTER EACH ATTEMPT:
+  1. Store in PostgreSQL: puzzle_id, attempt_number, rule_tried,
+     result_grid (as JSON), correct (boolean), timestamp, notes.
+  2. If correct: update playbook success_rate and missions count.
+  3. If incorrect: add the failed rule to the elimination list for this
+     puzzle. Next attempt skips eliminated rules.
+
+CROSS-PUZZLE LEARNING:
+  After solving a puzzle, check if the same rule type appears in any
+  previously-failed puzzles. Re-attempt those puzzles with the newly
+  confirmed rule.
+
+This protocol ensures ARA improves with every attempt and never makes
+the same mistake twice on the same puzzle.
+--- END NODE ---
+
+
+--- NODE: PERSISTENCE_001 ---
+TITLE: PostgreSQL Schema for Puzzle Attempt Tracking
+TYPE: schema
+DOMAIN: analytical-reasoning
+LOCKED: false
+
+Table: ara_puzzle_attempts
+  puzzle_id       TEXT NOT NULL        -- ARC puzzle identifier (e.g., "0d3d703e")
+  attempt_number  INTEGER NOT NULL     -- Sequential attempt number for this puzzle
+  rule_tried      TEXT NOT NULL        -- Transform ID and name (e.g., "T02: Horizontal Reflection")
+  result_grid     JSONB                -- The output grid produced by this attempt
+  expected_grid   JSONB                -- The correct output grid (if known)
+  correct         BOOLEAN NOT NULL     -- Whether this attempt was correct
+  confidence      TEXT                 -- HIGH, MEDIUM, LOW
+  notes           TEXT                 -- Free-text notes about why this attempt succeeded or failed
+  timestamp       TIMESTAMPTZ DEFAULT NOW()
+  PRIMARY KEY (puzzle_id, attempt_number)
+
+Table: ara_puzzle_rules
+  puzzle_id       TEXT PRIMARY KEY     -- ARC puzzle identifier
+  solved          BOOLEAN DEFAULT FALSE
+  correct_rule    TEXT                 -- The rule that solved this puzzle (if solved)
+  eliminated      TEXT[]               -- Array of rule IDs that have been tried and failed
+  attempts_total  INTEGER DEFAULT 0
+  last_attempt    TIMESTAMPTZ
+  notes           TEXT
+
+This schema supports the iteration protocol. Before each attempt, query
+ara_puzzle_rules to get the eliminated list and skip those rules.
+After each attempt, update both tables.
+--- END NODE ---
+
+================================================================================
+END OF MEMORY ADDITIONS
+================================================================================
